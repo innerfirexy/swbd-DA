@@ -4,7 +4,7 @@
 # Yang Xu
 # 10/6/2015
 
-import re, math
+import re, math, glob
 
 
 def fetch_text(file_name, num_line = 10):
@@ -58,7 +58,15 @@ def similarity_score(text1, text2):
 
 # main
 if __name__ == '__main__':
-    # exp
-    file_name = 'swb1_dialogact_annot/sw00utt/sw_0001_4325.utt'
-    text = fetch_text(file_name, num_line = 10)
-    print similarity_score(text, text)
+    
+    # find all folders under swb1_dialogact_annot
+    folders = glob.glob('swb1_dialogact_annot/sw*')
+    # get the full path of all files
+    all_files_path = []
+    for f in folders:
+        files = glob.glob(f + '/*.utt')
+        all_files_path += files
+
+    # db init
+
+    
