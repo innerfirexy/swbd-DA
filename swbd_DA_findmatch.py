@@ -22,7 +22,7 @@ def fetch_text(file_name, num_line = 10):
                 line = line.strip()
                 if line != '':
                     # split by 'utt\'
-                    items = re.split(r'utt\d:', line)
+                    items = re.split(r'utt\d+:', line)
                     # replace all punctuations with '' (except the single quotes)
                     try:
                         text = re.sub(r'[^\w\s\']|(?<=\{)\w{1}', '', items[1])
