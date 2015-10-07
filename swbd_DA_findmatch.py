@@ -64,7 +64,11 @@ def similarity_score(text1, text2):
     """
     set1 = set(text1)
     set2 = set(text2)
-    score = len(set1 & set2) / math.sqrt(len(set1) * len(set2))
+    denominator = math.sqrt(len(set1) * len(set2))
+    if denominator == 0:
+        score = float('nan')
+    else:
+        score = len(set1 & set2) / denominator
     return score
 
 
