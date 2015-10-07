@@ -120,7 +120,7 @@ if __name__ == '__main__':
     # store the highest top 3 convIDs in a list
     scores_top3 = []
     for file_name, words in local_words.iteritems():
-        scores = [(cid, similarity_score(words, words_db)) for cid, words_db in db_words.iteritems()]
+        scores = [(cid, SCC(words, words_db)) for cid, words_db in db_words.iteritems()]
         scores.sort(key = lambda tup: tup[1], reverse = True)
         scores_top3.append((file_name, scores[:3]))
 
