@@ -55,21 +55,34 @@ def fetch_text_db(db_cursor, conv_id, num_sent = 10):
     return words
 
 
-# A simple function that computes the similarity between two chuncks of text
-def similarity_score(text1, text2):
-    """
-    text1 and text2 are lists of words
-    the score returned is the ratio of the interection of the two sets over the product of the two length
-    return: score = (set1 & set2) / sqrt(len(set1) * len(set2))
-    """
-    set1 = set(text1)
-    set2 = set(text2)
-    denominator = math.sqrt(len(set1) * len(set2))
-    if denominator == 0:
-        score = float('nan')
+# Spearman's Correlation Coefficient
+def SCC(prime, target):
+    common = []
+    for w in target:
+        if w in prime:
+            if w not in common:
+                common.append(w)
+    if len(common) < 2:
+        return float('nan')
     else:
-        score = len(set1 & set2) / denominator
-    return score
+        p_count = [prime.count(w) for w in common]
+        t_count = [target.count(w) for w in common]
+        p_count.sort()
+        t_count.sort()
+        n = len(common)
+        diff = 0
+        for w in common:
+            p_c = prime.count(w)
+            t_c = target.count(w)
+            p_rank = p_count.index(p_c)
+            p_num = p_count.count(p_c)
+            p_rank = float(p_rank + p_rank + p_num - 1) / float(2)
+            t_rank = t_count.index(t_c)
+            t_num = t_count.count(t_c)
+            t_rank = float(t_rank + t_rank + t_num - 1) / float(2)
+            diff += (p_rank - t_rank) ** 2
+        rho = 1 - 6 * diff / float(n * (n**2 - 1))
+        return rho
 
 
 # main
@@ -114,4 +127,4 @@ if __name__ == '__main__':
     # write scores_top3 to disk
     with open('results/scores_top3.txt', 'wb') as fw:
         for tup in scores_top3:
-            fw.write(tup[0] + ',' + ','.join(map(str, tup[1])) + '\n')
+            fw.write(tup[0] + ',' + ','.join(map(str, [x for t in tup[1] for x in t])) + '\n')
