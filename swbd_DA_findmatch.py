@@ -99,7 +99,7 @@ if __name__ == '__main__':
     # db init: ssh yvx5085@brain.ist.psu.edu -i ~/.ssh/id_rsa -L 1234:localhost:3306
     conn = MySQLdb.connect(host = "127.0.0.1", 
                     user = "yang", 
-                    port = 1234,
+                    port = 3306,
                     passwd = "05012014",
                     db = "swbd")
     cur = conn.cursor()
