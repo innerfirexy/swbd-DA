@@ -4,7 +4,7 @@
 # Yang Xu
 # 10/6/2015
 
-import re, math, glob
+import re, math, glob, MySQLdb
 
 
 def fetch_text(file_name, num_line = 10):
@@ -48,7 +48,7 @@ def fetch_text_db(db_cursor, conv_id, num_sent = 10):
     num_sent: the first num_sent number of sentences will be fetched
     return: a list of words
     """
-    sql = 'SELECT rawWord FROM entropy WHERE convID = %s LIMIT(%s)'
+    sql = 'SELECT rawWord FROM entropy WHERE convID = %s LIMIT %s'
     db_cursor.execute(sql, (conv_id, num_sent))
     raw = [tup[0] for tup in db_cursor.fetchall()]
     words = reduce(lambda x, y: x + y, [s.split() for s in raw])
