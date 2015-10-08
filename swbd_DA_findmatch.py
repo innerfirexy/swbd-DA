@@ -110,7 +110,7 @@ if __name__ == '__main__':
     convIDs = [tup[0] for tup in cur.fetchall()]
 
     # fetch the first few sentences from each conversation, and store in a dict
-    NUM_SENT = 10
+    NUM_SENT = 200
     db_words = {cid: fetch_text_db(cur, cid, NUM_SENT) for cid in convIDs}
 
     # fetch the first few sentences from the .utt files, and store in a dict
