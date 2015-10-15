@@ -103,7 +103,7 @@ if __name__ == '__main__':
     cur.execute(sql)
     convIDs = [tup[0] for tup in cur.fetchall()]
 
-    for i, cid in convIDs:
+    for i, cid in enumerate(convIDs):
         sql = 'SELECT globalID FROM entropy WHERE convID = %s AND WS97 IS NOT NULL'
         cur.execute(sql, [cid])
         globalIDs = [tup[0] for tup in cur.fetchall()]
@@ -121,7 +121,7 @@ if __name__ == '__main__':
                     # update the simpleLabel column of current row
                     sql = 'UPDATE entropy SET simpleLabel = %s WHERE convID = %s AND globalID = %s'
                     cur.execute(sql, (simple_lbl, cid, gid))
-                    
+
         # print progress
         sys.stdout.write('\r%d/%d is updated' % (i+1, len(convIDs)))
         sys.stdout.flush()
