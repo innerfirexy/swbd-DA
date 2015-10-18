@@ -121,8 +121,36 @@ control_roles = foreach(data = df.new.splitByConvID, .combine = c) %dopar% assig
 df.new$controller = control_roles
 df.new$controller = as.factor(df.new$controller)
 
-# add columns for analysis
-df.new$controlledBySelf = df.new$speaker == df.new$controller
 
-# models
-summary(lmer(entc ~ controlledBySelf + (1|convID), df.new))
+# add "byMainController" column, which indicates whether a sentence is by 
+# the main controller within that topic segment
+# a main controller is the one who controls the majority (more than half) of sentences within the segment
+df.new$byMainController = FALSE
+# the function that creates the byMainController column
+createByMainController = function(data) {
+    topicIDs = unique(data$topicID)
+    result = c()
+    for (tpc_id in topicIDs) {
+        topic = data[data$topicID == tpc_id,]
+        A_count = length(which(topic$controller == 'A'))
+        B_count = length(which(topic$controller == 'B'))
+        if (A_count > B_count) {
+            main_controller = 'A'
+        } else if (A_count < B_count) {
+            main_controller = 'B'
+        } else {
+            main_controller = sample(c('A', 'B'), 1)
+        }
+        result = c(result, topic$speaker == main_controller)
+    }
+    result
+}
+
+registerDoMC(4)
+df.new.splitByConvID = split(df.new, df.new$convID)
+by_main_controller = foreach(data = df.new.splitByConvID, .combine = c) %dopar% createByMainController(data)
+
+df.new$byMainController = by_main_controller
+
+# save
+saveRDS(df.new, 'results/swbd_df_c_ctrl.rds')
