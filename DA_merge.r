@@ -35,14 +35,14 @@ summary(df.merged$simpleLabel)
 nrow(df.merged[is.na(df.merged$simpleLabel),]) / nrow(df.merged) # 29.53% NA
 
 
-# add "control" column
+# add "controller" column
 df.merged$controller = ''
 # the fucntion that picks a label from a vector of labels
 pickLabel = function(labels) {
     if (length(labels) == 1) {
         return(labels)
     } else if (length(labels) > 1) {
-        for (i in rev(seq_along(labels))) {
+        for (i in rev(seq_along(labels))) { # reverse
             lbl = labels[i]
             if (!is.na(lbl)) break
         }
